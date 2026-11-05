@@ -1,8 +1,3 @@
-# Лабораторна робота № 04. Варіант 7. Служба доставки.
-# Спадкування: базовий клас Shipment, похідні ParcelDelivery і DocumentDelivery.
-# Усі дані вигадані.
-
-
 class Courier:
     """Кур'єр (клас із лабораторних № 02-03)."""
 
@@ -20,7 +15,7 @@ class Shipment:
     """Базовий клас відправлення зі спільними атрибутами та контрольованим статусом."""
 
     valid_statuses = {"нове", "в дорозі", "доставлене"}
-    created_count = 0  # Атрибут класу, спільний для всіх видів відправлень.
+    created_count = 0  
 
     def __init__(self, number, city, courier, status="нове"):
         """Ініціалізує спільну для всіх відправлень частину."""
@@ -28,7 +23,7 @@ class Shipment:
         self.city = city
         self.courier = courier
         self._status = "нове"
-        self.status = status  # Запис іде через setter із перевіркою.
+        self.status = status 
         Shipment.created_count += 1
 
     @property
@@ -54,13 +49,13 @@ class Shipment:
 class ParcelDelivery(Shipment):
     """Доставка посилки: додає вагу, перевіряє її допустиме значення."""
 
-    MAX_WEIGHT = 30.0  # кг
+    MAX_WEIGHT = 30.0 
 
     def __init__(self, number, city, courier, weight, status="нове"):
         """Ініціалізує базову частину через super(), потім власну вагу."""
         super().__init__(number, city, courier, status)
         self._weight = None
-        self.weight = weight  # Атрибут, притаманний лише цьому виду.
+        self.weight = weight  
 
     @property
     def weight(self):
@@ -93,8 +88,6 @@ class DocumentDelivery(Shipment):
         mark = "конфіденційні" if self.confidential else "звичайні"
         return f"Документи: {self.pages} арк., {mark}"
 
-
-# --- Тестові об'єкти ---
 courier1 = Courier("Іван Петренко", "Львів – Дрогобич")
 courier2 = Courier("Олег Коваль", "Київ – Біла Церква")
 
@@ -103,18 +96,16 @@ parcel_b = ParcelDelivery(1002, "Київ", courier2, 10.0, "в дорозі")
 doc_a = DocumentDelivery(2001, "Львів", courier1, 12, True)
 doc_b = DocumentDelivery(2002, "Київ", courier2, 3)
 
-# --- Успадкований метод summary() і спеціалізовані методи ---
 print("Посилки:")
 for item in (parcel_a, parcel_b):
-    print(item.summary())  # Метод базового класу.
-    print("  ", item.weight_info())  # Метод нащадка.
+    print(item.summary()) 
+    print("  ", item.weight_info())  
 
 print("\nДокументи:")
 for item in (doc_a, doc_b):
     print(item.summary())
     print("  ", item.document_info())
 
-# --- Успадкований статус працює в нащадках ---
 doc_a.status = "доставлене"
 print("\nПісля зміни статусу:", doc_a.summary())
 
@@ -128,7 +119,6 @@ try:
 except ValueError as error:
     print("Помилка ваги:", error)
 
-# --- Перевірка зв'язку «є різновидом» ---
 print("\nParcelDelivery є Shipment:", isinstance(parcel_a, Shipment))
 print("DocumentDelivery є Shipment:", isinstance(doc_a, Shipment))
 print("DocumentDelivery є ParcelDelivery:", isinstance(doc_a, ParcelDelivery))
